@@ -1,6 +1,5 @@
 import { db } from "@/core/db";
 import { config } from "@/config/db/schema";
-import { eq } from "drizzle-orm";
 import { envConfigs } from "@/config";
 
 export type Config = typeof config.$inferSelect;
@@ -55,7 +54,12 @@ export async function getConfigs(): Promise<Configs> {
 }
 
 export async function getAllConfigs(): Promise<Configs> {
-  const dbConfigs = await getConfigs();
+  let dbConfigs: Configs = {};
+
+  // only get configs from db in server side
+  if (typeof window === "undefined") {
+    dbConfigs = await getConfigs();
+  }
 
   const configs = {
     ...envConfigs,

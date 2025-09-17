@@ -1,23 +1,15 @@
-import { getAllConfigs } from "@/services/config";
 import { respData, respErr } from "@/lib/resp";
-import { Resend } from "resend";
+import { emailService } from "@/services/email";
+import { VerificationCode } from "@/blocks/email/verification-code";
 
 export async function POST(req: Request) {
   try {
-    const configs = await getAllConfigs();
+    const { emails, subject } = await req.json();
 
-    if (!configs.resend_api_key || !configs.resend_sender_email) {
-      return respErr("RESEND_API_KEY or RESEND_SENDER_EMAIL is not set");
-    }
-
-    const { emails, subject, content } = await req.json();
-    const resend = new Resend(configs.resend_api_key);
-
-    const result = await resend.emails.send({
-      from: configs.resend_sender_email,
+    const result = await emailService.sendEmail({
       to: emails,
       subject: subject,
-      html: content,
+      react: VerificationCode({ code: "123455" }),
     });
 
     console.log("send email result", result);

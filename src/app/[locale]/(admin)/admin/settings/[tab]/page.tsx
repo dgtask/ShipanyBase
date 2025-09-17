@@ -127,6 +127,7 @@ export default async function SettingsPage({
             resend_api_key: resendApiKey as string,
             resend_sender_email: resendSenderEmail as string,
           });
+          break;
         } else {
           throw new Error("invalid provider");
         }

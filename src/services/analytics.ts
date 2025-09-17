@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Configs } from "@/services/config";
+import { Configs, getAllConfigs } from "@/services/config";
 import {
   AnalyticsManager,
   GoogleAnalyticsProvider,
@@ -8,7 +8,7 @@ import {
   VercelAnalyticsProvider,
 } from "@/extensions/analytics";
 
-export function getAnalyticsComponents(dbConfigs: Configs): {
+export function getAnalyticsComponents(configs: Configs): {
   analyticsMetaTags: ReactNode;
   analyticsHeadScripts: ReactNode;
   analyticsBodyScripts: ReactNode;
@@ -16,27 +16,27 @@ export function getAnalyticsComponents(dbConfigs: Configs): {
   const analytics = new AnalyticsManager();
 
   // google analytics
-  if (dbConfigs.google_analytics_id) {
+  if (configs.google_analytics_id) {
     analytics.addProvider(
-      new GoogleAnalyticsProvider({ gaId: dbConfigs.google_analytics_id })
+      new GoogleAnalyticsProvider({ gaId: configs.google_analytics_id })
     );
   }
 
   // plausible
-  if (dbConfigs.plausible_domain && dbConfigs.plausible_src) {
+  if (configs.plausible_domain && configs.plausible_src) {
     analytics.addProvider(
       new PlausibleAnalyticsProvider({
-        domain: dbConfigs.plausible_domain,
-        src: dbConfigs.plausible_src,
+        domain: configs.plausible_domain,
+        src: configs.plausible_src,
       })
     );
   }
 
   // openpanel
-  if (dbConfigs.openpanel_client_id) {
+  if (configs.openpanel_client_id) {
     analytics.addProvider(
       new OpenPanelAnalyticsProvider({
-        clientId: dbConfigs.openpanel_client_id,
+        clientId: configs.openpanel_client_id,
       })
     );
   }
@@ -53,3 +53,5 @@ export function getAnalyticsComponents(dbConfigs: Configs): {
     analyticsBodyScripts: analytics.getBodyScripts(),
   };
 }
+
+export const analyticsService = getAnalyticsComponents(await getAllConfigs());

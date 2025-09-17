@@ -3,7 +3,7 @@ import "@/config/style/global.css";
 import { getLocale, setRequestLocale } from "next-intl/server";
 import { locales } from "@/config/locale";
 import { envConfigs } from "@/config";
-import { getConfigs } from "@/services/config";
+import { getAllConfigs } from "@/services/config";
 import { getAdsComponents } from "@/services/ads";
 import { getAnalyticsComponents } from "@/services/analytics";
 
@@ -15,21 +15,21 @@ export default async function RootLayout({
   const locale = await getLocale();
   setRequestLocale(locale);
 
-  // get configs from db
-  const dbConfigs = await getConfigs();
+  const isProduction = process.env.NODE_ENV === "production" || true;
 
   // app url
   const appUrl = envConfigs.app_url || "";
 
-  const isProduction = process.env.NODE_ENV === "production" || true;
+  // get configs from db
+  const configs = await getAllConfigs();
 
   // get analytics components in production
   const { analyticsMetaTags, analyticsHeadScripts, analyticsBodyScripts } =
-    getAnalyticsComponents(isProduction ? dbConfigs : {});
+    getAnalyticsComponents(isProduction ? configs : {});
 
   // get ads components in production
   const { adsMetaTags, adsHeadScripts, adsBodyScripts } = getAdsComponents(
-    isProduction ? dbConfigs : {}
+    isProduction ? configs : {}
   );
 
   return (

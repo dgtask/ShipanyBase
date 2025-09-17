@@ -1,8 +1,8 @@
-import { Configs } from "@/services/config";
+import { Configs, getAllConfigs } from "@/services/config";
 import { AdsManager, AdsenseProvider } from "@/extensions/ads";
 import { ReactNode } from "react";
 
-export function getAdsComponents(dbConfigs: Configs): {
+export function getAdsComponents(configs: Configs): {
   adsMetaTags: ReactNode;
   adsHeadScripts: ReactNode;
   adsBodyScripts: ReactNode;
@@ -10,8 +10,8 @@ export function getAdsComponents(dbConfigs: Configs): {
   const ads = new AdsManager();
 
   // adsense
-  if (dbConfigs.adsense_code) {
-    ads.addProvider(new AdsenseProvider({ adId: dbConfigs.adsense_code }));
+  if (configs.adsense_code) {
+    ads.addProvider(new AdsenseProvider({ adId: configs.adsense_code }));
   }
 
   return {
@@ -20,3 +20,5 @@ export function getAdsComponents(dbConfigs: Configs): {
     adsBodyScripts: ads.getBodyScripts(),
   };
 }
+
+export const adsService = getAdsComponents(await getAllConfigs());
