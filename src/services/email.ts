@@ -7,12 +7,14 @@ import { Configs, getAllConfigs } from "@/services/config";
 export function getEmailService(configs: Configs) {
   const emailManager = new EmailManager();
 
-  emailManager.addProvider(
-    new ResendProvider({
-      apiKey: configs.resend_api_key,
-      defaultFrom: configs.resend_sender_email,
-    })
-  );
+  if (configs.resend_api_key) {
+    emailManager.addProvider(
+      new ResendProvider({
+        apiKey: configs.resend_api_key,
+        defaultFrom: configs.resend_sender_email,
+      })
+    );
+  }
 
   return emailManager;
 }

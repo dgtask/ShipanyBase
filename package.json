@@ -11,7 +11,8 @@
     "db:migrate": "npx drizzle-kit migrate --config=src/core/db/config.ts",
     "db:push": "npx drizzle-kit push --config=src/core/db/config.ts",
     "db:studio": "npx drizzle-kit studio --config=src/core/db/config.ts",
-    "auth:generate": "npx @better-auth/cli generate --config=src/core/auth/index.ts"
+    "auth:generate": "npx @better-auth/cli generate --config=src/core/auth/index.ts",
+    "postinstall": "fumadocs-mdx"
   },
   "dependencies": {
     "@ai-sdk/replicate": "^1.0.8",
@@ -43,6 +44,7 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@tabler/icons-react": "^3.34.1",
     "@tanstack/react-table": "^8.21.3",
+    "@types/mdx": "^2.0.13",
     "@vercel/analytics": "^1.5.0",
     "ai": "^5.0.39",
     "aws4fetch": "^1.0.20",
@@ -52,6 +54,9 @@
     "dotenv": "^17.2.0",
     "drizzle-orm": "^0.44.2",
     "framer-motion": "^12.23.12",
+    "fumadocs-core": "^15.7.12",
+    "fumadocs-mdx": "^11.10.0",
+    "fumadocs-ui": "^15.7.12",
     "google": "link:@next/third-parties/google",
     "lucide-react": "^0.543.0",
     "moment": "^2.30.1",

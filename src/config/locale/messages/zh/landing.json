@@ -90,9 +90,9 @@
     "show_locale": true
   },
   "hero": {
-    "title": "Ship AI Startups in hours, not days",
+    "title": "一小时快速上线 AI SaaS 项目",
     "highlight_text": "Ship Any",
-    "description": "ShipAny is a NextJS boilerplate for building AI SaaS startups.<br/>Ship Fast with a variety of templates and components.",
+    "description": "ShipAny 是一个基于 NextJS 的 AI SaaS 开发框架，内置丰富的组件和 AI SDK，帮助你快速完成 AI SaaS 项目开发。",
     "announcement": {
       "badge": "New",
       "title": "🎉 ShipAny Template Two",

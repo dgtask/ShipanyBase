@@ -3,7 +3,7 @@ export interface PostItem {
   title?: string;
   description?: string;
   image?: string;
-  content?: string;
+  content?: string | ReactNode;
   created_at?: string;
   author_name?: string;
   author_image?: string;

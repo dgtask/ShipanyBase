@@ -47,7 +47,7 @@ export function getMetadata(
     // canonical url
     const canonicalUrl = await getCanonicalUrl(
       options.canonicalUrl || "",
-      locale
+      locale || ""
     );
 
     const title =
@@ -142,7 +142,7 @@ async function getCanonicalUrl(canonicalUrl: string, locale: string) {
     }
 
     canonicalUrl = `${envConfigs.app_url}${
-      locale === "en" ? "" : `/${locale}`
+      !locale || locale === "en" ? "" : `/${locale}`
     }${canonicalUrl}`;
   }
 
