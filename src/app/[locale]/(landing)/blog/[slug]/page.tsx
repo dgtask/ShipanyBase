@@ -1,5 +1,5 @@
 import { findPost } from "@/services/post";
-import { PostDetail } from "@/blocks/landing/blog-detail";
+import { BlogDetailTwo } from "@/blocks/landing/blog-detail-two";
 import { getTranslations } from "next-intl/server";
 import { envConfigs } from "@/config";
 import { Post as PostType } from "@/types/blocks/blog";
@@ -58,7 +58,7 @@ export default async function BlogDetailPage({
 
   return (
     <>
-      <PostDetail post={postData} />
+      <BlogDetailTwo post={postData} />
     </>
   );
 }

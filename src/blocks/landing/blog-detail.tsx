@@ -4,7 +4,7 @@ import { NavItem } from "@/types/blocks/common";
 import { getTranslations } from "next-intl/server";
 import { MarkdownPreview } from "@/blocks/common";
 
-export async function PostDetail({ post }: { post: PostType }) {
+export async function BlogDetail({ post }: { post: PostType }) {
   const t = await getTranslations("blog");
 
   const crumbItems: NavItem[] = [
