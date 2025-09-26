@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,6 +12,7 @@ import {
   IconChevronLeft,
   IconChevronRight,
 } from "@tabler/icons-react";
+import { useAppContext } from "@/contexts/app";
 
 interface ImageGeneratorProps {
   allowMultipleImages?: boolean;
@@ -27,6 +28,12 @@ export function ImageGenerator({
   const [uploadedImages, setUploadedImages] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [currentPreviewIndex, setCurrentPreviewIndex] = useState(0);
+
+  const { user } = useAppContext();
+
+  useEffect(() => {
+    console.log("user", user);
+  }, [user]);
 
   // Sample preview images
   const sampleImages = [

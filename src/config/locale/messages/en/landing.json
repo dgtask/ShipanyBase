@@ -41,6 +41,11 @@
               "icon": "Image"
             },
             {
+              "title": "AI Music Generator",
+              "url": "/demo/ai-music-generator",
+              "icon": "Music"
+            },
+            {
               "title": "AI Video Generator",
               "url": "/demo/ai-video-generator",
               "icon": "Video"

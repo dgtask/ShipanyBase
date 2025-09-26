@@ -6,7 +6,7 @@ export * from "./brand-logo";
 
 export * from "./locale-selector";
 export * from "./theme-toggler";
-export * from "./sign-user";
+export * from "../sign/sign-user";
 
 export * from "./social-avatars";
 

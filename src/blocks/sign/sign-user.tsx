@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { signOut, useSession } from "@/core/auth/client";
+import { signOut } from "@/core/auth/client";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,6 +15,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useRouter } from "@/core/i18n/navigation";
 import { Loader2 } from "lucide-react";
 import { envConfigs } from "@/config";
+import { SignModal } from "./sign-modal";
+import { useAppContext } from "@/contexts/app";
 
 export function SignUser({
   isScrolled,
@@ -30,10 +32,10 @@ export function SignUser({
     return null;
   }
 
-  const { data: session, isPending } = useSession();
+  const { isCheckSign, user, setIsShowSignModal } = useAppContext();
   const router = useRouter();
 
-  if (isPending) {
+  if (isCheckSign) {
     return (
       <div>
         <Loader2 className="size-4 animate-spin" />
@@ -41,25 +43,17 @@ export function SignUser({
     );
   }
 
-  if (session && session.user) {
+  if (user) {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger>
           <Avatar>
-            <AvatarImage
-              src={session.user.image || ""}
-              alt={session.user.name || ""}
-            />
-            <AvatarFallback>{session.user.name.charAt(0)}</AvatarFallback>
+            <AvatarImage src={user.image || ""} alt={user.name || ""} />
+            <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuLabel>{session.user.name}</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Profile</DropdownMenuItem>
-          <DropdownMenuItem onClick={() => router.push("/admin")}>
-            Admin
-          </DropdownMenuItem>
+          <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => signOut()}>
             <span>Sign Out</span>
@@ -78,10 +72,11 @@ export function SignUser({
           "border-foreground/10 ml-4 h-7 ring-0",
           isScrolled && "lg:hidden"
         )}
-        onClick={() => router.push("/sign-in")}
+        onClick={() => setIsShowSignModal(true)}
       >
         <span>Sign In</span>
       </Button>
+      <SignModal />
     </div>
   );
 }

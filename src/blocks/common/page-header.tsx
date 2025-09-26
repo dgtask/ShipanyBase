@@ -23,7 +23,7 @@ export function PageHeader({
   return (
     <section className={cn("py-16 md:py-32", className)}>
       <div className="mx-auto max-w-6xl px-6">
-        <div className="mx-auto max-w-2xl space-y-6 text-center">
+        <div className="mx-auto max-w-3xl space-y-6 text-center">
           <h1 className="text-center text-4xl font-semibold lg:text-5xl">
             {title}
           </h1>

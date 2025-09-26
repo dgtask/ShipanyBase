@@ -25,7 +25,7 @@ import { type Header as HeaderType } from "@/types/blocks/landing";
 import { NavItem } from "@/types/blocks/common";
 import { SmartIcon } from "@/blocks/common/smart-icon";
 import Image from "next/image";
-import { SignUser } from "@/blocks/common/sign-user";
+import { SignUser } from "@/blocks/sign/sign-user";
 import { BrandLogo, LocaleSelector, ThemeToggler } from "@/blocks/common";
 
 export function HeaderOne({

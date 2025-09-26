@@ -27,6 +27,17 @@
       "keywords": "AI image generator, artificial intelligence, create images, AI art"
     }
   },
+  "ai-music-generator": {
+    "metadata": {
+      "title": "AI Music Generator - Create Amazing Music with AI",
+      "description": "Generate stunning music using AI technology. Fast, easy and creative.",
+      "keywords": "AI music generator, artificial intelligence, create music, AI music"
+    },
+    "h1-title": "AI Music Generator",
+    "title": "Create Amazing Music with AI",
+    "description": "Use AI music model to generate music, support music to music and text to music.",
+    "tip": "🎁 50% off for first month"
+  },
   "ai-video-generator": {
     "title": "AI Video Generator",
     "description": "Use AI video model to generate videos, support video to video and text to video.",
