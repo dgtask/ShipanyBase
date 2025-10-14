@@ -30,6 +30,7 @@
     "@libsql/client": "^0.15.9",
     "@next/bundle-analyzer": "^15.5.5",
     "@next/third-parties": "16.0.0-beta.0",
+    "@opennextjs/cloudflare": "^1.10.1",
     "@openrouter/ai-sdk-provider": "^1.2.0",
     "@paypal/checkout-server-sdk": "^1.0.3",
     "@paypal/paypal-server-sdk": "1.1.0",
