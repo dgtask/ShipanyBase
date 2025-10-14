@@ -33,6 +33,7 @@ postgresql://user:password@host:port/db
 3. Create database tables with orm migrate
 
 ```shell
+pnpm db:generate
 pnpm db:migrate
 ```
 

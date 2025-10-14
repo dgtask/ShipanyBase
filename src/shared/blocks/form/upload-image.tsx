@@ -88,7 +88,7 @@ export function UploadImage({
     setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
     setUploadedUrls(newUploadedUrls);
 
-    // 更新表单值
+    // Update form value
     if (newUploadedUrls.length > 0) {
       formField.onChange(
         maxImages === 1 ? newUploadedUrls[0] : newUploadedUrls

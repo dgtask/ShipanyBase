@@ -150,10 +150,10 @@ export function Form({
         field.metadata?.max &&
         field.metadata.max > 1
       ) {
-        // 多图上传：默认值为数组
+        // Multiple image upload: default value is an array
         const val = data?.[field.name] ?? field.value;
         if (typeof val === "string" && val) {
-          // 如果是逗号分隔的字符串，转换为数组
+          // If it's a comma-separated string, convert to array
           defaultValues[field.name] = val.split(",").filter(Boolean);
         } else if (Array.isArray(val)) {
           defaultValues[field.name] = val;
@@ -175,7 +175,7 @@ export function Form({
     console.log("=== Form Submit Start ===");
     console.log("[Form Submit] Raw form data:", data);
 
-    // 检查 upload_image 字段
+    // Check upload_image field
     fields?.forEach((field) => {
       if (field.type === "upload_image" && field.name) {
         console.log(`[Form Submit] Upload field "${field.name}":`, {
@@ -193,14 +193,14 @@ export function Form({
       const formData = new FormData();
 
       Object.entries(data).forEach(([key, value]) => {
-        // 如果是数组，用逗号拼接
+        // If it's an array, join with commas
         if (Array.isArray(value)) {
           const joinedValue = value.join(",");
           console.log(`[Form Submit] ${key} (array):`, value, "→", joinedValue);
           formData.append(key, joinedValue);
         } else {
           console.log(`[Form Submit] ${key}:`, value);
-          // 保留布尔值和其他类型的原始值
+          // Preserve boolean and other types' original values
           formData.append(key, String(value));
         }
       });

@@ -151,7 +151,7 @@ export function SidebarUser({ user }: { user: SidebarUserType }) {
     );
   }
 
-  // 未登录的情况
+  // When user is not logged in
   return (
     <>
       {open ? (

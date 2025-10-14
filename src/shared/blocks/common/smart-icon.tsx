@@ -2,7 +2,7 @@ import { lazy, Suspense, ComponentType } from "react";
 
 const iconCache: { [key: string]: ComponentType<any> } = {};
 
-// 自动判断图标库的函数
+// Function to automatically detect icon library
 function detectIconLibrary(name: string): "ri" | "lucide" {
   if (name && name.startsWith("Ri")) {
     return "ri";

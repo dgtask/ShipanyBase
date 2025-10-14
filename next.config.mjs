@@ -29,8 +29,29 @@ const nextConfig = {
   },
   experimental: {
     turbopackFileSystemCacheForDev: true,
+    // Optimize package imports
+    optimizePackageImports: [
+      "lucide-react",
+      "@radix-ui/react-icons",
+      "framer-motion",
+      "recharts",
+      "@tabler/icons-react",
+    ],
   },
   reactCompiler: true,
+  // Optimize output
+  compress: true,
+  // Parallel build
+  webpack: (config, { isServer }) => {
+    // Optimize webpack config
+    if (!isServer) {
+      config.optimization = {
+        ...config.optimization,
+        moduleIds: "deterministic",
+      };
+    }
+    return config;
+  },
 };
 
 const withMDX = createMDX({

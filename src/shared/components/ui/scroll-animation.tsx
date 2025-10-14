@@ -22,13 +22,13 @@ export function ScrollAnimation({
   const ref = useRef(null);
   const isInView = useInView(ref, {
     once: true,
-    margin: "-50px", // 优化：更早触发动画，改善感知性能
+    margin: "-50px", // Optimization: trigger animation earlier for better perceived performance
   });
 
-  // 尊重用户的减少动画偏好设置（无障碍）
+  // Respect user's reduced motion preference (accessibility)
   const shouldReduceMotion = useReducedMotion();
 
-  // 如果用户偏好减少动画或禁用了 JavaScript，直接显示内容
+  // If user prefers reduced motion or JavaScript is disabled, show content directly
   if (shouldReduceMotion) {
     return (
       <div ref={ref} className={className}>

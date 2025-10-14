@@ -13,7 +13,7 @@ import { AnimatedGridPattern } from "@/shared/components/ui/animated-grid-patter
 import { cn } from "@/shared/lib/utils";
 import { Highlighter } from "@/shared/components/ui/highlighter";
 
-// 创建动画配置函数
+// Create animation configuration function
 const createFadeInVariant = (delay: number) => ({
   initial: {
     opacity: 0,
@@ -51,7 +51,7 @@ export function Hero({
         id={hero.id}
         className={`pt-24 pb-8 md:pt-36 md:pb-8 ${hero.className} ${className}`}
       >
-        {/* 公告 - 第1个元素 */}
+        {/* Announcement - Element 1 */}
         {hero.announcement && (
           <motion.div {...createFadeInVariant(0)}>
             <Link
@@ -79,7 +79,7 @@ export function Hero({
         )}
 
         <div className="relative mx-auto max-w-5xl text-center">
-          {/* 标题 - 第2个元素 */}
+          {/* Title - Element 2 */}
           <motion.div {...createFadeInVariant(0.15)}>
             {texts && texts.length > 0 ? (
               <h1 className="text-foreground text-balance text-5xl font-semibold sm:mt-12 sm:text-7xl">
@@ -96,14 +96,14 @@ export function Hero({
             )}
           </motion.div>
 
-          {/* 描述 - 第3个元素 */}
+          {/* Description - Element 3 */}
           <motion.p
             {...createFadeInVariant(0.3)}
             className="text-muted-foreground mb-8 mt-8 text-balance text-lg"
             dangerouslySetInnerHTML={{ __html: hero.description ?? "" }}
           />
 
-          {/* 按钮组 - 第4个元素 */}
+          {/* Button Group - Element 4 */}
           {hero.buttons && (
             <motion.div
               {...createFadeInVariant(0.45)}
@@ -129,7 +129,7 @@ export function Hero({
             </motion.div>
           )}
 
-          {/* 提示文字 - 第5个元素 */}
+          {/* Hint Text - Element 5 */}
           {hero.tip && (
             <motion.p
               {...createFadeInVariant(0.6)}
@@ -138,7 +138,7 @@ export function Hero({
             />
           )}
 
-          {/* 社交头像 - 第6个元素 */}
+          {/* Social Avatars - Element 6 */}
           {hero.show_avatars && (
             <motion.div {...createFadeInVariant(0.75)}>
               <SocialAvatars num={999} />
@@ -146,7 +146,7 @@ export function Hero({
           )}
         </div>
       </section>
-      {/* 图片 - 第7个元素 */}
+      {/* Image - Element 7 */}
       {hero.image && (
         <motion.section
           className="border-foreground/10 relative mt-8 border-y sm:mt-16"

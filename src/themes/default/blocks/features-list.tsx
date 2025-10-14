@@ -17,7 +17,7 @@ export function FeaturesList({
   className?: string;
 }) {
   return (
-    // 防止水平滚动
+    // Prevent horizontal scrolling
     <section className={`py-16 md:py-24 overflow-x-hidden ${className}`}>
       <div className="container overflow-x-hidden">
         <div className="flex flex-wrap items-center pb-12 md:gap-24 gap-8">
@@ -29,7 +29,7 @@ export function FeaturesList({
                 width={500}
                 height={300}
                 className="rounded-lg object-cover w-full h-auto"
-                // 限制图片最大宽度&自适应宽度
+                // Limit max image width & responsive width
                 style={{ maxWidth: "100%", height: "auto", display: "block" }}
               />
             </div>
@@ -80,7 +80,7 @@ export function FeaturesList({
         </div>
 
         <ScrollAnimation delay={0.1}>
-          {/* 防止水平滚动, min-w-0 和 break-words */}
+          {/* Prevent horizontal scrolling, min-w-0 and break-words */}
           <div className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-3 gap-y-6 sm:gap-6 border-t pt-12 min-w-0 break-words">
             {features.items?.map((item, idx) => (
               <div className="space-y-3 min-w-0 break-words" key={idx}>
