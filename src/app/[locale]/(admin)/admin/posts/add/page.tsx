@@ -5,6 +5,11 @@ import { Header, Main, MainHeader } from '@/shared/blocks/dashboard';
 import { FormCard } from '@/shared/blocks/form';
 import { getUuid } from '@/shared/lib/hash';
 import { addPost, NewPost, PostStatus, PostType } from '@/shared/services/post';
+import {
+  getTaxonomies,
+  TaxonomyStatus,
+  TaxonomyType,
+} from '@/shared/services/taxonomy';
 import { getUserInfo } from '@/shared/services/user';
 import { Crumb } from '@/shared/types/blocks/common';
 import { Form } from '@/shared/types/blocks/form';
@@ -32,6 +37,17 @@ export default async function PostAddPage({
     { title: t('add.crumbs.add'), is_active: true },
   ];
 
+  const categories = await getTaxonomies({
+    type: TaxonomyType.CATEGORY,
+    status: TaxonomyStatus.PUBLISHED,
+  });
+  const categoriesOptions = [
+    ...categories.map((category) => ({
+      title: category.title,
+      value: category.id,
+    })),
+  ];
+
   const form: Form = {
     fields: [
       {
@@ -51,6 +67,30 @@ export default async function PostAddPage({
         name: 'description',
         type: 'textarea',
         title: t('fields.description'),
+      },
+      {
+        name: 'categories',
+        type: 'select',
+        title: t('fields.categories'),
+        options: categoriesOptions,
+      },
+      {
+        name: 'image',
+        type: 'upload_image',
+        title: t('fields.image'),
+        metadata: {
+          max: 1,
+        },
+      },
+      {
+        name: 'authorName',
+        type: 'text',
+        title: t('fields.author_name'),
+      },
+      {
+        name: 'authorImage',
+        type: 'upload_image',
+        title: t('fields.author_image'),
       },
       {
         name: 'content',
@@ -78,6 +118,10 @@ export default async function PostAddPage({
         const title = data.get('title') as string;
         const description = data.get('description') as string;
         const content = data.get('content') as string;
+        const categories = data.get('categories') as string;
+        const image = data.get('image') as string;
+        const authorName = data.get('authorName') as string;
+        const authorImage = data.get('authorImage') as string;
 
         if (!slug?.trim() || !title?.trim()) {
           throw new Error('slug and title are required');
@@ -91,12 +135,12 @@ export default async function PostAddPage({
           type: PostType.ARTICLE,
           title: title.trim(),
           description: description.trim(),
-          image: '',
+          image: image as string,
           content: content.trim(),
-          categories: '',
+          categories: categories.trim(),
           tags: '',
-          authorName: '',
-          authorImage: '',
+          authorName: authorName.trim(),
+          authorImage: authorImage as string,
           status: PostStatus.PUBLISHED,
         };
 

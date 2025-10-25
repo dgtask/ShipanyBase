@@ -54,6 +54,17 @@ export default async function PostsPage({
   const table: Table = {
     columns: [
       { name: 'title', title: t('fields.title') },
+      { name: 'authorName', title: t('fields.author_name') },
+      {
+        name: 'image',
+        title: t('fields.image'),
+        type: 'image',
+        metadata: {
+          width: 100,
+          height: 80,
+        },
+        className: 'rounded-md',
+      },
       {
         name: 'categories',
         title: t('fields.categories'),

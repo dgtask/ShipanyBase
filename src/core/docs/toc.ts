@@ -1,4 +1,5 @@
 import type { TOCItemType as FumadocsTOCItemType } from 'fumadocs-core/server';
+import { slug } from 'github-slugger';
 
 export type TOCItemType = FumadocsTOCItemType;
 
@@ -30,11 +31,8 @@ export function generateTOC(content: string): TOCItemType[] {
 
 /**
  * Generate heading ID from text
- * This should match the ID generation in your MDX renderer
+ * Uses github-slugger to match rehype-slug behavior
  */
 function generateHeadingId(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9\u4e00-\u9fff]+/g, '-')
-    .replace(/(^-|-$)/g, '');
+  return slug(text);
 }

@@ -86,6 +86,24 @@ export default async function PostEditPage({
         options: categoriesOptions,
       },
       {
+        name: 'image',
+        type: 'upload_image',
+        title: t('fields.image'),
+        metadata: {
+          max: 1,
+        },
+      },
+      {
+        name: 'authorName',
+        type: 'text',
+        title: t('fields.author_name'),
+      },
+      {
+        name: 'authorImage',
+        type: 'upload_image',
+        title: t('fields.author_image'),
+      },
+      {
         name: 'content',
         type: 'markdown_editor',
         title: t('fields.content'),
@@ -119,6 +137,9 @@ export default async function PostEditPage({
         const description = data.get('description') as string;
         const content = data.get('content') as string;
         const categories = data.get('categories') as string;
+        const authorName = data.get('authorName') as string;
+        const authorImage = data.get('authorImage') as string;
+        const image = data.get('image') as string;
 
         if (!slug?.trim() || !title?.trim()) {
           throw new Error('slug and title are required');
@@ -130,12 +151,12 @@ export default async function PostEditPage({
           type: PostType.ARTICLE,
           title: title.trim(),
           description: description.trim(),
-          image: '',
+          image: image as string,
           content: content.trim(),
           categories: categories.trim(),
           tags: '',
-          authorName: '',
-          authorImage: '',
+          authorName: authorName.trim(),
+          authorImage: authorImage as string,
           status: PostStatus.PUBLISHED,
         };
 

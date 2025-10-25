@@ -98,7 +98,7 @@ export function Blog({
                               <AvatarImage
                                 src={item.author_image || ''}
                                 alt={item.author_name || ''}
-                                className="size-6"
+                                className="size-6 rounded-full"
                               />
                               <AvatarFallback>
                                 {item.author_name?.charAt(0) || 'U'}
