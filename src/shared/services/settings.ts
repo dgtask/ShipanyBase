@@ -70,7 +70,15 @@ export async function getSettingGroups() {
     {
       name: 'google_analytics',
       title: t('groups.google_analytics'),
-      description: 'custom your google analytics settings',
+      description:
+        'custom your <a href="https://analytics.google.com/" class="text-primary" target="_blank">Google Analytics</a> settings',
+      tab: 'analytics',
+    },
+    {
+      name: 'clarity',
+      title: t('groups.clarity'),
+      description:
+        'custom your <a href="https://clarity.microsoft.com/" class="text-primary" target="_blank">Clarity</a> settings',
       tab: 'analytics',
     },
     {
@@ -342,6 +350,14 @@ export async function getSettings() {
       type: 'text',
       placeholder: '',
       group: 'google_analytics',
+      tab: 'analytics',
+    },
+    {
+      name: 'clarity_id',
+      title: 'Clarity ID',
+      type: 'text',
+      placeholder: '',
+      group: 'clarity',
       tab: 'analytics',
     },
     {

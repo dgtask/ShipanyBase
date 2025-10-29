@@ -1,5 +1,6 @@
 import {
   AnalyticsManager,
+  ClarityAnalyticsProvider,
   GoogleAnalyticsProvider,
   OpenPanelAnalyticsProvider,
   PlausibleAnalyticsProvider,
@@ -17,6 +18,13 @@ export function getAnalyticsManagerWithConfigs(configs: Configs) {
   if (configs.google_analytics_id) {
     analytics.addProvider(
       new GoogleAnalyticsProvider({ gaId: configs.google_analytics_id })
+    );
+  }
+
+  // clarity
+  if (configs.clarity_id) {
+    analytics.addProvider(
+      new ClarityAnalyticsProvider({ clarityId: configs.clarity_id })
     );
   }
 
