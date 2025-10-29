@@ -5,6 +5,7 @@
     "avatar": "头像",
     "email": "邮箱",
     "email_verified": "邮箱已验证",
+    "remaining_credits": "剩余积分",
     "created_at": "创建时间",
     "actions": "操作",
     "roles": "角色"

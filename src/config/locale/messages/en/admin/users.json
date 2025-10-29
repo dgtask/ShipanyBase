@@ -5,6 +5,7 @@
     "avatar": "Avatar",
     "email": "Email",
     "email_verified": "Email Verified",
+    "remaining_credits": "Remaining Credits",
     "created_at": "Created At",
     "actions": "Actions",
     "roles": "Roles"

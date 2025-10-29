@@ -4,6 +4,7 @@ import { PERMISSIONS, requirePermission } from '@/core/rbac';
 import { Header, Main, MainHeader } from '@/shared/blocks/dashboard';
 import { TableCard } from '@/shared/blocks/table';
 import { Badge } from '@/shared/components/ui/badge';
+import { getRemainingCredits } from '@/shared/services/credit';
 import { getUserRoles } from '@/shared/services/rbac';
 import { getUsers, getUsersCount, User } from '@/shared/services/user';
 import { Crumb, Search } from '@/shared/types/blocks/common';
@@ -89,6 +90,15 @@ export default async function AdminUsersPage({
         title: t('fields.email_verified'),
         type: 'label',
         placeholder: '-',
+      },
+      {
+        name: 'remainingCredits',
+        title: t('fields.remaining_credits'),
+        callback: async (item: User) => {
+          const credits = await getRemainingCredits(item.id);
+
+          return <div className="text-green-500">{credits}</div>;
+        },
       },
       { name: 'createdAt', title: t('fields.created_at'), type: 'time' },
       {
