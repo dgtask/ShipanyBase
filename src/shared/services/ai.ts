@@ -27,7 +27,7 @@ let aiService: AIManager | null = null;
  * get ai service manager
  */
 export async function getAIService(): Promise<AIManager> {
-  if (!aiService) {
+  if (true) {
     const configs = await getAllConfigs();
     aiService = getAIManagerWithConfigs(configs);
   }

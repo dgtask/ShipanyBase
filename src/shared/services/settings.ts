@@ -77,6 +77,12 @@ export async function getSettingTabs(tab: string) {
       url: '/admin/settings/affiliate',
       is_active: tab === 'affiliate',
     },
+    {
+      name: 'customer_service',
+      title: t('edit.tabs.customer_service'),
+      url: '/admin/settings/customer_service',
+      is_active: tab === 'customer_service',
+    },
   ];
 
   return tabs;
@@ -217,6 +223,20 @@ export async function getSettingGroups() {
       description:
         'custom your <a href="https://www.promotekit.com?via=shipany" class="text-primary" target="_blank">PromoteKit</a> settings',
       tab: 'affiliate',
+    },
+    {
+      name: 'crisp',
+      title: t('groups.crisp'),
+      description:
+        'custom your <a href="https://crisp.chat" class="text-primary" target="_blank">Crisp</a> settings',
+      tab: 'customer_service',
+    },
+    {
+      name: 'tawk',
+      title: t('groups.tawk'),
+      description:
+        'custom your <a href="https://www.tawk.to" class="text-primary" target="_blank">Tawk</a> settings',
+      tab: 'customer_service',
     },
   ];
   return settingGroups;
@@ -618,6 +638,47 @@ export async function getSettings() {
       group: 'promotekit',
       tab: 'affiliate',
     },
+    {
+      name: 'crisp_enabled',
+      title: 'Crisp Enabled',
+      type: 'switch',
+      value: 'false',
+      group: 'crisp',
+      tab: 'customer_service',
+    },
+    {
+      name: 'crisp_website_id',
+      title: 'Crisp Website ID',
+      type: 'text',
+      placeholder: 'xxx',
+      group: 'crisp',
+      tab: 'customer_service',
+    },
+    {
+      name: 'tawk_enabled',
+      title: 'Tawk Enabled',
+      type: 'switch',
+      value: 'false',
+      group: 'tawk',
+      tab: 'customer_service',
+    },
+    {
+      name: 'tawk_property_id',
+      title: 'Tawk Property ID',
+      tip: 'Tawk Property ID is associated with your Tawk account',
+      type: 'text',
+      placeholder: 'xxx',
+      group: 'tawk',
+      tab: 'customer_service',
+    },
+    {
+      name: 'tawk_widget_id',
+      title: 'Tawk Widget ID',
+      type: 'text',
+      placeholder: 'xxx',
+      group: 'tawk',
+      tab: 'customer_service',
+    },
   ];
 
   return settings;
@@ -636,4 +697,6 @@ export const publicSettingNames = [
   'paypal_enabled',
   'affonso_enabled',
   'promotekit_enabled',
+  'crisp_enabled',
+  'tawk_enabled',
 ];

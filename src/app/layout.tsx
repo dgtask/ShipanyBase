@@ -9,6 +9,7 @@ import { locales } from '@/config/locale';
 import { getAdsService } from '@/shared/services/ads';
 import { getAffiliateService } from '@/shared/services/affiliate';
 import { getAnalyticsService } from '@/shared/services/analytics';
+import { getCustomerService } from '@/shared/services/customer_service';
 
 const notoSansMono = Noto_Sans_Mono({
   subsets: ['latin'],
@@ -35,6 +36,7 @@ export default async function RootLayout({
   setRequestLocale(locale);
 
   const isProduction = process.env.NODE_ENV === 'production';
+  const isDebug = process.env.NEXT_PUBLIC_DEBUG === 'true';
 
   // app url
   const appUrl = envConfigs.app_url || '';
@@ -54,7 +56,12 @@ export default async function RootLayout({
   let affiliateHeadScripts = null;
   let affiliateBodyScripts = null;
 
-  if (isProduction) {
+  // customer service components
+  let customerServiceMetaTags = null;
+  let customerServiceHeadScripts = null;
+  let customerServiceBodyScripts = null;
+
+  if (isProduction || isDebug) {
     // get ads components
     const adsService = await getAdsService();
     adsMetaTags = adsService.getMetaTags();
@@ -72,6 +79,12 @@ export default async function RootLayout({
     affiliateMetaTags = affiliateService.getMetaTags();
     affiliateHeadScripts = affiliateService.getHeadScripts();
     affiliateBodyScripts = affiliateService.getBodyScripts();
+
+    // get customer service components
+    const customerService = await getCustomerService();
+    customerServiceMetaTags = customerService.getMetaTags();
+    customerServiceHeadScripts = customerService.getHeadScripts();
+    customerServiceBodyScripts = customerService.getBodyScripts();
   }
 
   return (
@@ -112,6 +125,11 @@ export default async function RootLayout({
         {affiliateMetaTags}
         {/* inject affiliate head scripts */}
         {affiliateHeadScripts}
+
+        {/* inject customer service meta tags */}
+        {customerServiceMetaTags}
+        {/* inject customer service head scripts */}
+        {customerServiceHeadScripts}
       </head>
       <body suppressHydrationWarning className="overflow-x-hidden">
         <NextTopLoader
@@ -135,6 +153,9 @@ export default async function RootLayout({
 
         {/* inject affiliate body scripts */}
         {affiliateBodyScripts}
+
+        {/* inject customer service body scripts */}
+        {customerServiceBodyScripts}
       </body>
     </html>
   );

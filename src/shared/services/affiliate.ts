@@ -40,7 +40,7 @@ let affiliateService: AffiliateManager | null = null;
  * get affiliate service instance
  */
 export async function getAffiliateService(): Promise<AffiliateManager> {
-  if (!affiliateService) {
+  if (true) {
     const configs = await getAllConfigs();
     affiliateService = getAffiliateManagerWithConfigs(configs);
   }

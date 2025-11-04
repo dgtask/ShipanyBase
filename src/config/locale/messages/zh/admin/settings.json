@@ -20,7 +20,9 @@
     "vercel_analytics": "Vercel Analytics",
     "adsense": "Adsense",
     "affonso": "Affonso",
-    "promotekit": "PromoteKit"
+    "promotekit": "PromoteKit",
+    "tawk": "Tawk",
+    "crisp": "Crisp"
   },
   "edit": {
     "title": "设置",
@@ -36,7 +38,8 @@
       "ai": "AI",
       "analytics": "分析",
       "ads": "广告",
-      "affiliate": "联盟营销"
+      "affiliate": "联盟营销",
+      "customer_service": "客服"
     },
     "buttons": {
       "submit": "保存"

@@ -20,7 +20,9 @@
     "vercel_analytics": "Vercel Analytics",
     "adsense": "Adsense",
     "affonso": "Affonso",
-    "promotekit": "PromoteKit"
+    "promotekit": "PromoteKit",
+    "tawk": "Tawk",
+    "crisp": "Crisp"
   },
   "edit": {
     "title": "Settings",
@@ -36,7 +38,8 @@
       "ai": "AI",
       "analytics": "Analytics",
       "ads": "Ads",
-      "affiliate": "Affiliate"
+      "affiliate": "Affiliate",
+      "customer_service": "Customer Service"
     },
     "buttons": {
       "submit": "Save"

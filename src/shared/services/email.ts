@@ -28,7 +28,7 @@ let emailService: EmailManager | null = null;
  * get email service instance
  */
 export async function getEmailService(): Promise<EmailManager> {
-  if (!emailService) {
+  if (true) {
     const configs = await getAllConfigs();
     emailService = getEmailServiceWithConfigs(configs);
   }

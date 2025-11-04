@@ -64,7 +64,7 @@ let analyticsService: AnalyticsManager | null = null;
  * get analytics service instance
  */
 export async function getAnalyticsService(): Promise<AnalyticsManager> {
-  if (!analyticsService) {
+  if (true) {
     const configs = await getAllConfigs();
     analyticsService = getAnalyticsManagerWithConfigs(configs);
   }
