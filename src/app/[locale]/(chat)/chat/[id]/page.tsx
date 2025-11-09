@@ -11,7 +11,8 @@ export default async function ChatPage({
 }: {
   params: Promise<{ id: string; locale: string }>;
 }) {
-  const { id, locale } = await params;
+  const resolvedParams = await params;
+  const { id, locale } = resolvedParams;
 
   const chat = await findChatById(id);
   if (!chat) {

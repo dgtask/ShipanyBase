@@ -77,6 +77,8 @@ export function ChatInput({
   const [input, setInput] = useState('');
   const [webSearch, setWebSearch] = useState(false);
   const [reasoning, setReasoning] = useState(false);
+  const selectedModelLabel =
+    models.find((item) => item.name === model)?.title ?? models[0]?.title ?? '';
 
   return (
     <div className="w-full">
@@ -151,7 +153,9 @@ export function ChatInput({
               value={model}
             >
               <PromptInputSelectTrigger>
-                <PromptInputSelectValue />
+                <PromptInputSelectValue>
+                  {selectedModelLabel}
+                </PromptInputSelectValue>
               </PromptInputSelectTrigger>
               <PromptInputSelectContent>
                 {models.map((model) => (

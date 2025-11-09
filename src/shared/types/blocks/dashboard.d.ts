@@ -22,6 +22,7 @@ export interface SidebarUser {
   show_email?: boolean;
   show_signout?: boolean;
   signout_callback?: string;
+  signin_callback?: string;
 }
 
 export interface Sidebar {

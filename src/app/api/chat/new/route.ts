@@ -46,7 +46,8 @@ export async function POST(req: Request) {
       model: body.model,
       provider: provider,
       title: title,
-      parts: JSON.stringify(parts),
+      parts: '',
+      // parts: JSON.stringify(parts),
       metadata: JSON.stringify(body),
       content: JSON.stringify(message),
     };

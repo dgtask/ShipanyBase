@@ -35,6 +35,12 @@
               "description": "使用 AI 生成美妙的音乐",
               "url": "/ai-music-generator",
               "icon": "RiMusic2Line"
+            },
+            {
+              "title": "AI 聊天机器人",
+              "description": "与 AI 聊天机器人对话",
+              "url": "/chat",
+              "icon": "RiMessage2Line"
             }
           ]
         },

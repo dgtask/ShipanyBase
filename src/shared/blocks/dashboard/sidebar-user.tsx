@@ -1,12 +1,13 @@
 'use client';
 
 import { Fragment, useEffect, useState } from 'react';
-import { ChevronsUpDown, Loader2, LogOut } from 'lucide-react';
+import { ChevronsUpDown, Loader2, LogOut, User } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 import { signOut, useSession } from '@/core/auth/client';
 import { Link, useRouter } from '@/core/i18n/navigation';
 import { SmartIcon } from '@/shared/blocks/common';
+import { SignModal } from '@/shared/blocks/sign/sign-modal';
 import {
   Avatar,
   AvatarFallback,
@@ -28,6 +29,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/shared/components/ui/sidebar';
+import { useAppContext } from '@/shared/contexts/app';
 import { NavItem } from '@/shared/types/blocks/common';
 import { SidebarUser as SidebarUserType } from '@/shared/types/blocks/dashboard';
 
@@ -37,6 +39,8 @@ export function SidebarUser({ user }: { user: SidebarUserType }) {
   const { data: session, isPending } = useSession();
   const { isMobile, open } = useSidebar();
   const router = useRouter();
+
+  const { setIsShowSignModal } = useAppContext();
 
   // This state will ensure rendering only happens after client hydration
   const [hasMounted, setHasMounted] = useState(false);
@@ -161,14 +165,17 @@ export function SidebarUser({ user }: { user: SidebarUserType }) {
               <Loader2 className="animate-spin" />
             </div>
           ) : (
-            <Button className="w-full" onClick={() => {}}>
-              Sign in
+            <Button className="w-full" onClick={() => setIsShowSignModal(true)}>
+              <User className="mr-1 h-4 w-4" />
+              {t('sign_in_title')}
             </Button>
           )}
         </div>
       ) : (
         <SidebarMenu />
       )}
+
+      <SignModal callbackUrl={user.signin_callback || '/'} />
     </>
   );
 }

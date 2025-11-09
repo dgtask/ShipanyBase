@@ -46,7 +46,8 @@
       },
       "show_email": false,
       "show_signout": true,
-      "signout_callback": "/"
+      "signout_callback": "/chat",
+      "signin_callback": "/chat"
     },
     "footer": {
       "nav": {

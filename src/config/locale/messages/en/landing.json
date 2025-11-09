@@ -35,6 +35,12 @@
               "description": "Use AI to generate music",
               "url": "/ai-music-generator",
               "icon": "RiMusic2Line"
+            },
+            {
+              "title": "AI Chatbot",
+              "description": "Chat with AI chatbot",
+              "url": "/chat",
+              "icon": "RiMessage2Line"
             }
           ]
         },

@@ -24,12 +24,9 @@ import { useMediaQuery } from '@/shared/hooks/use-media-query';
 
 import { SignInForm } from './sign-in-form';
 
-export function SignModal() {
+export function SignModal({ callbackUrl = '/' }: { callbackUrl?: string }) {
   const t = useTranslations('common.sign');
   const { isShowSignModal, setIsShowSignModal } = useAppContext();
-
-  // todo: dynamic set callbackURL
-  const callbackURL = '/';
 
   const isDesktop = useMediaQuery('(min-width: 768px)');
 
@@ -41,7 +38,7 @@ export function SignModal() {
             <DialogTitle>{t('sign_in_title')}</DialogTitle>
             <DialogDescription>{t('sign_in_description')}</DialogDescription>
           </DialogHeader>
-          <SignInForm callbackUrl={callbackURL} />
+          <SignInForm callbackUrl={callbackUrl} />
         </DialogContent>
       </Dialog>
     );
@@ -54,7 +51,7 @@ export function SignModal() {
           <DrawerTitle>{t('sign_in_title')}</DrawerTitle>
           <DrawerDescription>{t('sign_in_description')}</DrawerDescription>
         </DrawerHeader>
-        <SignInForm callbackUrl={callbackURL} className="mt-8 px-4" />
+        <SignInForm callbackUrl={callbackUrl} className="mt-8 px-4" />
         <DrawerFooter className="pt-4">
           <DrawerClose asChild>
             <Button variant="outline">{t('cancel_title')}</Button>

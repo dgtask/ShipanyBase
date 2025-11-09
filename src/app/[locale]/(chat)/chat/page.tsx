@@ -1,7 +1,11 @@
-'use client';
-
 import { ChatGenerator } from '@/shared/blocks/chat/generator';
 
-export default function ChatPage() {
+export default async function ChatPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+
   return <ChatGenerator />;
 }
