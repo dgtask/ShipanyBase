@@ -30,7 +30,7 @@ export function SidebarHeader({ header }: { header: SidebarHeaderType }) {
                       alt={header.brand.logo.alt || ''}
                       width={80}
                       height={80}
-                      className="h-6 w-auto"
+                      className="h-auto w-8 shrink-0"
                     />
                   )}
                   <span className="text-base font-semibold">

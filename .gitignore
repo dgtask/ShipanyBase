@@ -61,3 +61,5 @@ src/config/db/migrations
 
 *.sql
 .source
+
+.chats

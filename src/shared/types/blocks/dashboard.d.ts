@@ -1,4 +1,6 @@
-import { Brand, Nav } from './common';
+import { ReactNode } from 'react';
+
+import { Brand, Button, Nav } from './common';
 
 export interface Dashboard {
   sidebar?: Sidebar;
@@ -24,7 +26,9 @@ export interface SidebarUser {
 
 export interface Sidebar {
   header?: SidebarHeader;
+  buttons?: Button[];
   main_navs?: Nav[];
+  library?: ReactNode;
   bottom_nav?: Nav;
   user?: SidebarUser;
   footer?: SidebarFooter;

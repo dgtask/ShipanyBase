@@ -488,3 +488,52 @@ export const aiTask = pgTable(
     index('idx_ai_task_media_type_status').on(table.mediaType, table.status),
   ]
 );
+
+export const chat = pgTable(
+  'chat',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    status: text('status').notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+    model: text('model').notNull(),
+    provider: text('provider').notNull(),
+    title: text('title').notNull().default(''),
+    parts: text('parts').notNull(),
+    metadata: text('metadata'),
+    content: text('content'),
+  },
+  (table) => [index('idx_chat_user_status').on(table.userId, table.status)]
+);
+
+export const chatMessage = pgTable(
+  'chat_message',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    chatId: text('chat_id')
+      .notNull()
+      .references(() => chat.id, { onDelete: 'cascade' }),
+    status: text('status').notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
+      .$onUpdate(() => new Date())
+      .notNull(),
+    role: text('role').notNull(),
+    parts: text('parts').notNull(),
+    metadata: text('metadata'),
+    model: text('model').notNull(),
+    provider: text('provider').notNull(),
+  },
+  (table) => [
+    index('idx_chat_message_chat_id').on(table.chatId, table.status),
+    index('idx_chat_message_user_id').on(table.userId, table.status),
+  ]
+);
