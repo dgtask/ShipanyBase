@@ -27,6 +27,7 @@
       "prompt_too_long": "Prompt is too long, please delete some content"
     },
     "generate": "Generate Images",
+    "checking_account": "Checking Account...",
     "loading": "Loading...",
     "generating": "Generating...",
     "sign_in_to_generate": "Sign In to Generate Image",

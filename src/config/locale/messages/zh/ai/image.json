@@ -27,6 +27,7 @@
       "prompt_too_long": "提示词太长，请删除一些内容"
     },
     "generate": "生成图片",
+    "checking_account": "检查账户...",
     "loading": "加载中...",
     "generating": "生成中...",
     "sign_in_to_generate": "登录生成图片",

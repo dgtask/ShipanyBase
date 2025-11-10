@@ -344,6 +344,9 @@ export function ImageGenerator({
         console.error('Error polling image task:', error);
         toast.error(`Query task failed: ${error.message}`);
         resetTaskState();
+
+        fetchUserCredits();
+
         return true;
       }
     },

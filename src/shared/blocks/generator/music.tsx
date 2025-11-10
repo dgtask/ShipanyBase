@@ -220,6 +220,9 @@ export function MusicGenerator({ className, srOnlyTitle }: SongGeneratorProps) {
       setProgress(0);
       setGenerationStartTime(null);
       toast.error('Create song failed: ' + error.message);
+
+      fetchUserCredits();
+
       return true; // Stop polling on error
     }
   };
