@@ -876,3 +876,14 @@ export const publicSettingNames = [
   'crisp_enabled',
   'tawk_enabled',
 ];
+
+export async function getAllSettingNames() {
+  const settings = await getSettings();
+  const settingNames: string[] = [];
+
+  settings.forEach((setting: Setting) => {
+    settingNames.push(setting.name);
+  });
+
+  return settingNames;
+}
