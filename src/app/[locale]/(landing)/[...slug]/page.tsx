@@ -25,6 +25,11 @@ export async function generateMetadata({
   const staticPageSlug =
     typeof slug === 'string' ? slug : (slug as string[]).join('/') || '';
 
+  // filter invalid slug
+  if (staticPageSlug.includes('.')) {
+    return;
+  }
+
   // build canonical url
   canonicalUrl =
     locale !== envConfigs.locale
@@ -101,6 +106,11 @@ export default async function DynamicPage({
   // static page slug
   const staticPageSlug =
     typeof slug === 'string' ? slug : (slug as string[]).join('/') || '';
+
+  // filter invalid slug
+  if (staticPageSlug.includes('.')) {
+    return notFound();
+  }
 
   // get static page content
   const staticPage = await getLocalPage({ slug: staticPageSlug, locale });
