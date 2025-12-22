@@ -48,6 +48,7 @@ export function SignUser({
   // get app context values
   const {
     configs,
+    fetchConfigs,
     setIsShowSignModal,
     isCheckSign,
     setIsCheckSign,
@@ -70,6 +71,10 @@ export function SignUser({
 
   // show one tap if not initialized
   useEffect(() => {
+    if (!isPending && !session && !Object.values(configs).length) {
+      fetchConfigs();
+    }
+
     if (
       configs &&
       configs.google_client_id &&

@@ -144,10 +144,6 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    fetchConfigs();
-  }, []);
-
-  useEffect(() => {
     userRef.current = user;
   }, [user]);
 
