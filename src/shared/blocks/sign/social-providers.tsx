@@ -50,10 +50,12 @@ export function SocialProviders({
           setLoading(true);
         },
         onResponse: (ctx) => {
-          setLoading(false);
+          // Do NOT reset loading here; navigation may not have completed yet.
+        },
+        onSuccess: (ctx) => {
+          // Close modal if any; navigation will proceed.
           setIsShowSignModal(false);
         },
-        onSuccess: (ctx) => {},
         onError: (e: any) => {
           toast.error(e?.error?.message || 'sign in failed');
           setLoading(false);
@@ -92,6 +94,7 @@ export function SocialProviders({
       {providers.map((provider) => (
         <Button
           key={provider.name}
+          type="button"
           variant="outline"
           className={cn('w-full gap-2')}
           disabled={loading}

@@ -5,6 +5,7 @@ import { getLocale } from 'next-intl/server';
 import { db } from '@/core/db';
 import { envConfigs } from '@/config';
 import * as schema from '@/config/db/schema';
+import { VerifyEmail } from '@/shared/blocks/email/verify-email';
 import {
   getCookieFromCtx,
   getHeaderValue,
@@ -13,7 +14,14 @@ import {
 import { getUuid } from '@/shared/lib/hash';
 import { getClientIp } from '@/shared/lib/ip';
 import { grantCreditsForNewUser } from '@/shared/models/credit';
+import { getEmailService } from '@/shared/services/email';
 import { grantRoleForNewUser } from '@/shared/services/rbac';
+
+// Best-effort dedupe to prevent sending verification emails too frequently.
+// This is especially helpful in dev/hot reload, transient network conditions,
+// and to add a server-side throttle beyond any client-side cooldown.
+const recentVerificationEmailSentAt = new Map<string, number>();
+const VERIFICATION_EMAIL_MIN_INTERVAL_MS = 60_000;
 
 // Static auth options - NO database connection
 // This ensures zero database calls during build time
@@ -64,6 +72,9 @@ const authOptions = {
 
 // get auth options with configs
 export async function getAuthOptions(configs: Record<string, string>) {
+  const emailVerificationEnabled =
+    configs.email_verification_enabled === 'true' && !!configs.resend_api_key;
+
   return {
     ...authOptions,
     // Add database connection only when actually needed (runtime)
@@ -138,7 +149,57 @@ export async function getAuthOptions(configs: Record<string, string>) {
     },
     emailAndPassword: {
       enabled: configs.email_auth_enabled !== 'false',
+      requireEmailVerification: emailVerificationEnabled,
+      // Avoid creating a session immediately after sign up when verification is required.
+      autoSignIn: emailVerificationEnabled ? false : true,
     },
+    ...(emailVerificationEnabled
+      ? {
+          emailVerification: {
+            // We explicitly send verification emails from the UI with a callbackURL
+            // (redirecting to /verify-email). Disabling automatic sends avoids duplicates.
+            sendOnSignUp: false,
+            sendOnSignIn: false,
+            // After user clicks the verification link, create session automatically.
+            autoSignInAfterVerification: true,
+            // 24 hours
+            expiresIn: 60 * 60 * 24,
+            sendVerificationEmail: async (
+              { user, url }: { user: any; url: string; token: string },
+              _request: Request
+            ) => {
+              try {
+                const key = String(user?.email || '').toLowerCase();
+                const now = Date.now();
+                const last = recentVerificationEmailSentAt.get(key) || 0;
+                if (key && now - last < VERIFICATION_EMAIL_MIN_INTERVAL_MS) {
+                  return;
+                }
+                if (key) {
+                  recentVerificationEmailSentAt.set(key, now);
+                }
+
+                const emailService = await getEmailService(configs as any);
+                const logoUrl = envConfigs.app_logo?.startsWith('http')
+                  ? envConfigs.app_logo
+                  : `${envConfigs.app_url}${envConfigs.app_logo?.startsWith('/') ? '' : '/'}${envConfigs.app_logo || ''}`;
+                // Avoid blocking auth response on email sending.
+                await emailService.sendEmail({
+                  to: user.email,
+                  subject: `Verify your email - ${envConfigs.app_name}`,
+                  react: VerifyEmail({
+                    appName: envConfigs.app_name,
+                    logoUrl,
+                    url,
+                  }),
+                });
+              } catch (e) {
+                console.log('send verification email failed:', e);
+              }
+            },
+          },
+        }
+      : {}),
     socialProviders: await getSocialProviders(configs),
     plugins:
       configs.google_client_id && configs.google_one_tap_enabled === 'true'

@@ -5,7 +5,7 @@ import { Loader2 } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
-import { signIn } from '@/core/auth/client';
+import { authClient, signIn } from '@/core/auth/client';
 import { Link, useRouter } from '@/core/i18n/navigation';
 import { defaultLocale } from '@/config/locale';
 import { Button } from '@/shared/components/ui/button';
@@ -24,6 +24,7 @@ export function SignInForm({
 }) {
   const t = useTranslations('common.sign');
   const router = useRouter();
+  const locale = useLocale();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -37,7 +38,6 @@ export function SignInForm({
     (!isGoogleAuthEnabled && !isGithubAuthEnabled); // no social providers enabled, auto enable email auth
 
   if (callbackUrl) {
-    const locale = useLocale();
     if (
       locale !== defaultLocale &&
       callbackUrl.startsWith('/') &&
@@ -46,6 +46,16 @@ export function SignInForm({
       callbackUrl = `/${locale}${callbackUrl}`;
     }
   }
+
+  const base = locale !== defaultLocale ? `/${locale}` : '';
+  const stripLocalePrefix = (path: string) => {
+    if (!path?.startsWith('/')) return '/';
+    if (locale === defaultLocale) return path;
+    if (path === `/${locale}`) return '/';
+    if (path.startsWith(`/${locale}/`))
+      return path.slice(locale.length + 1) || '/';
+    return path;
+  };
 
   const handleSignIn = async () => {
     if (loading) {
@@ -57,8 +67,10 @@ export function SignInForm({
       return;
     }
 
+    // Set loading immediately to avoid duplicate submits before request hooks fire.
+    setLoading(true);
+
     try {
-      setLoading(true);
       await signIn.email(
         {
           email,
@@ -67,21 +79,40 @@ export function SignInForm({
         },
         {
           onRequest: (ctx) => {
-            setLoading(true);
+            // loading is already set above; keep as no-op for safety
           },
           onResponse: (ctx) => {
-            setLoading(false);
+            // Do NOT reset loading here; navigation may not have completed yet.
           },
-          onSuccess: (ctx) => {},
+          onSuccess: (ctx) => {
+            // Keep loading=true until navigation completes.
+          },
           onError: (e: any) => {
+            const status = e?.error?.status;
+            if (status === 403) {
+              const normalizedCallbackUrl = stripLocalePrefix(callbackUrl);
+              const verifyPath = `/verify-email?sent=1&email=${encodeURIComponent(
+                email
+              )}&callbackUrl=${encodeURIComponent(normalizedCallbackUrl)}`;
+
+              // Send verification email with callback to verify page.
+              void authClient.sendVerificationEmail({
+                email,
+                callbackURL: `${base}${verifyPath}`,
+              });
+
+              // i18n router will prefix locale automatically; do NOT include locale here.
+              router.push(verifyPath);
+              return;
+            }
+
             toast.error(e?.error?.message || 'sign in failed');
             setLoading(false);
           },
         }
       );
     } catch (e: any) {
-      toast.error(e.message || 'sign in failed');
-    } finally {
+      toast.error(e?.message || 'sign in failed');
       setLoading(false);
     }
   };
@@ -90,7 +121,13 @@ export function SignInForm({
     <div className={`w-full md:max-w-md ${className}`}>
       <div className="grid gap-4">
         {isEmailAuthEnabled && (
-          <>
+          <form
+            className="grid gap-4"
+            onSubmit={(e) => {
+              e.preventDefault();
+              void handleSignIn();
+            }}
+          >
             <div className="grid gap-2">
               <Label htmlFor="email">{t('email_title')}</Label>
               <Input
@@ -134,19 +171,14 @@ export function SignInForm({
             <Label htmlFor="remember">{t("remember_me_title")}</Label>
           </div> */}
 
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={loading}
-              onClick={handleSignIn}
-            >
+            <Button type="submit" className="w-full" disabled={loading}>
               {loading ? (
                 <Loader2 size={16} className="animate-spin" />
               ) : (
                 <p> {t('sign_in_title')} </p>
               )}
             </Button>
-          </>
+          </form>
         )}
 
         <SocialProviders

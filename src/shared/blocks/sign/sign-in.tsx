@@ -5,7 +5,7 @@ import { Loader2 } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
-import { signIn } from '@/core/auth/client';
+import { authClient, signIn } from '@/core/auth/client';
 import { Link, useRouter } from '@/core/i18n/navigation';
 import { defaultLocale } from '@/config/locale';
 import { Button } from '@/shared/components/ui/button';
@@ -25,13 +25,16 @@ import { SocialProviders } from './social-providers';
 export function SignIn({
   configs,
   callbackUrl = '/',
+  defaultEmail = '',
 }: {
   configs: Record<string, string>;
   callbackUrl: string;
+  defaultEmail?: string;
 }) {
   const router = useRouter();
+  const locale = useLocale();
   const t = useTranslations('common.sign');
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(defaultEmail || '');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
@@ -43,7 +46,6 @@ export function SignIn({
     (!isGoogleAuthEnabled && !isGithubAuthEnabled); // no social providers enabled, auto enable email auth
 
   if (callbackUrl) {
-    const locale = useLocale();
     if (
       locale !== defaultLocale &&
       callbackUrl.startsWith('/') &&
@@ -52,6 +54,16 @@ export function SignIn({
       callbackUrl = `/${locale}${callbackUrl}`;
     }
   }
+
+  const base = locale !== defaultLocale ? `/${locale}` : '';
+  const stripLocalePrefix = (path: string) => {
+    if (!path?.startsWith('/')) return '/';
+    if (locale === defaultLocale) return path;
+    if (path === `/${locale}`) return '/';
+    if (path.startsWith(`/${locale}/`))
+      return path.slice(locale.length + 1) || '/';
+    return path;
+  };
 
   const handleSignIn = async () => {
     if (loading) {
@@ -63,26 +75,58 @@ export function SignIn({
       return;
     }
 
-    await signIn.email(
-      {
-        email,
-        password,
-        callbackURL: callbackUrl,
-      },
-      {
-        onRequest: (ctx) => {
-          setLoading(true);
+    // Set loading immediately to avoid duplicate submits before request hooks fire.
+    setLoading(true);
+
+    try {
+      await signIn.email(
+        {
+          email,
+          password,
+          callbackURL: callbackUrl,
         },
-        onResponse: (ctx) => {
-          setLoading(false);
-        },
-        onSuccess: (ctx) => {},
-        onError: (e: any) => {
-          toast.error(e?.error?.message || 'sign in failed');
-          setLoading(false);
-        },
-      }
-    );
+        {
+          onRequest: (ctx) => {
+            // loading is already set above; keep as no-op for safety
+          },
+          onResponse: (ctx) => {
+            // Do NOT reset loading here; navigation may not have completed yet.
+          },
+          onSuccess: (ctx) => {
+            // Keep loading=true until navigation completes.
+          },
+          onError: (e: any) => {
+            const status = e?.error?.status;
+            if (status === 403) {
+              const normalizedCallbackUrl = stripLocalePrefix(callbackUrl);
+              const verifyPath = `/verify-email?sent=1&email=${encodeURIComponent(
+                email
+              )}&callbackUrl=${encodeURIComponent(normalizedCallbackUrl)}`;
+
+              // IMPORTANT:
+              // better-auth does not URL-encode callbackURL when generating the verification URL.
+              // So callbackURL must not contain its own '&' query params (or they'll get split).
+              // We send users to home/callbackUrl after verification, and keep the verify page only
+              // as the waiting UI.
+              void authClient.sendVerificationEmail({
+                email,
+                callbackURL: `${base}${normalizedCallbackUrl || '/'}`,
+              });
+
+              // i18n router will prefix locale automatically; do NOT include locale here.
+              router.push(verifyPath);
+              return;
+            }
+
+            toast.error(e?.error?.message || 'sign in failed');
+            setLoading(false);
+          },
+        }
+      );
+    } catch (e: any) {
+      toast.error(e?.message || 'sign in failed');
+      setLoading(false);
+    }
   };
 
   return (
@@ -98,7 +142,13 @@ export function SignIn({
       <CardContent>
         <div className="grid gap-4">
           {isEmailAuthEnabled && (
-            <>
+            <form
+              className="grid gap-4"
+              onSubmit={(e) => {
+                e.preventDefault();
+                void handleSignIn();
+              }}
+            >
               <div className="grid gap-2">
                 <Label htmlFor="email">{t('email_title')}</Label>
                 <Input
@@ -144,19 +194,14 @@ export function SignIn({
             <Label htmlFor="remember">Remember me</Label>
           </div> */}
 
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={loading}
-                onClick={handleSignIn}
-              >
+              <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? (
                   <Loader2 size={16} className="animate-spin" />
                 ) : (
                   <p> {t('sign_in_title')} </p>
                 )}
               </Button>
-            </>
+            </form>
           )}
 
           <SocialProviders

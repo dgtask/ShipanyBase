@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Check, Globe, Languages } from 'lucide-react';
 import { useLocale } from 'next-intl';
+import { useSearchParams } from 'next/navigation';
 
 import { usePathname, useRouter } from '@/core/i18n/navigation';
 import { localeNames } from '@/config/locale';
@@ -23,6 +24,7 @@ export function LocaleSelector({
   const currentLocale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -33,7 +35,9 @@ export function LocaleSelector({
     if (value !== currentLocale) {
       // Update localStorage to sync with locale detector
       cacheSet('locale', value);
-      router.push(pathname, {
+      const query = searchParams?.toString?.() ?? '';
+      const href = query ? `${pathname}?${query}` : pathname;
+      router.push(href, {
         locale: value,
       });
     }

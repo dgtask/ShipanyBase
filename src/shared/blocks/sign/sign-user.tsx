@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Fragment } from 'react/jsx-runtime';
 import { Coins, LayoutDashboard, Loader2, LogOut, User } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
-import { signOut } from '@/core/auth/client';
+import { authClient, signOut, useSession } from '@/core/auth/client';
 import { Link, useRouter } from '@/core/i18n/navigation';
 import {
   Avatar,
@@ -22,10 +22,16 @@ import {
 } from '@/shared/components/ui/dropdown-menu';
 import { useAppContext } from '@/shared/contexts/app';
 import { cn } from '@/shared/lib/utils';
+import { User as UserType } from '@/shared/models/user';
 import { NavItem, UserNav } from '@/shared/types/blocks/common';
 
 import { SmartIcon } from '../common/smart-icon';
 import { SignModal } from './sign-modal';
+
+function extractSessionUser(data: any): UserType | null {
+  const u = data?.user ?? data?.data?.user ?? null;
+  return u && typeof u === 'object' ? (u as UserType) : null;
+}
 
 export function SignUser({
   isScrolled,
@@ -37,7 +43,6 @@ export function SignUser({
   userNav?: UserNav;
 }) {
   const t = useTranslations('common.sign');
-  const { isCheckSign, user, setIsShowSignModal } = useAppContext();
   const router = useRouter();
 
   const [mounted, setMounted] = useState(false);
@@ -45,13 +50,99 @@ export function SignUser({
     setMounted(true);
   }, []);
 
+  // get app context values
+  const {
+    configs,
+    fetchConfigs,
+    setIsShowSignModal,
+    isCheckSign,
+    setIsCheckSign,
+    user,
+    setUser,
+    fetchUserInfo,
+    showOneTap,
+  } = useAppContext();
+
+  // get session
+  const { data: session, isPending } = useSession();
+  const sessionUser = extractSessionUser(session);
+  const displayUser = (user as UserType | null) ?? sessionUser;
+
+  // In dev (React StrictMode) effects can run twice; ensure we don't spam getSession().
+  const didFallbackSyncRef = useRef(false);
+
+  // one tap initialized
+  const oneTapInitialized = useRef(false);
+
+  // set is check sign
+  useEffect(() => {
+    setIsCheckSign(isPending);
+  }, [isPending]);
+
+  // show one tap if not initialized
+  useEffect(() => {
+    if (!isPending && !Object.values(configs).length) {
+      fetchConfigs();
+    }
+
+    if (
+      configs &&
+      configs.google_client_id &&
+      configs.google_one_tap_enabled === 'true' &&
+      !session &&
+      !isPending &&
+      !oneTapInitialized.current
+    ) {
+      oneTapInitialized.current = true;
+      showOneTap(configs);
+    }
+  }, [configs, session, isPending]);
+
+  // set user
+  useEffect(() => {
+    const currentUserId = user?.id;
+    const sessionUserId = (sessionUser as any)?.id;
+
+    if (sessionUser && sessionUserId !== currentUserId) {
+      setUser(sessionUser as UserType);
+      fetchUserInfo();
+    } else if (!sessionUser && currentUserId) {
+      setUser(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionUser?.id, (sessionUser as any)?.email, user?.id]);
+
+  // Fallback: if the session cookie is present but useSession lags, do a single refresh.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (didFallbackSyncRef.current) return;
+    // Only run when useSession is done but still no user.
+    if (isPending) return;
+    if (sessionUser || user) return;
+
+    didFallbackSyncRef.current = true;
+    void (async () => {
+      try {
+        const res: any = await authClient.getSession();
+        const fresh = extractSessionUser(res?.data ?? res);
+        if (fresh?.id) {
+          setUser(fresh);
+          fetchUserInfo();
+        }
+      } catch {
+        // ignore
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPending, sessionUser, user?.id]);
+
   return (
     <>
       {isCheckSign || !mounted ? (
         <div>
           <Loader2 className="size-4 animate-spin" />
         </div>
-      ) : user ? (
+      ) : displayUser ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
@@ -59,8 +150,11 @@ export function SignUser({
               className="relative h-10 w-10 rounded-full p-0"
             >
               <Avatar>
-                <AvatarImage src={user.image || ''} alt={user.name || ''} />
-                <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                <AvatarImage
+                  src={displayUser.image || ''}
+                  alt={displayUser.name || ''}
+                />
+                <AvatarFallback>{displayUser.name.charAt(0)}</AvatarFallback>
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
@@ -73,7 +167,7 @@ export function SignUser({
                     href="/settings/profile"
                   >
                     <User />
-                    {user.name}
+                    {displayUser.name}
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
@@ -89,7 +183,7 @@ export function SignUser({
                   >
                     <Coins />
                     {t('credits_title', {
-                      credits: user.credits?.remainingCredits || 0,
+                      credits: displayUser.credits?.remainingCredits || 0,
                     })}
                   </Link>
                 </DropdownMenuItem>
@@ -118,7 +212,7 @@ export function SignUser({
               </Fragment>
             ))}
 
-            {user.isAdmin && (
+            {displayUser.isAdmin && (
               <>
                 <DropdownMenuItem asChild>
                   <Link className="w-full cursor-pointer" href="/admin">

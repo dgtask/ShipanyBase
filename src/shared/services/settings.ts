@@ -377,6 +377,15 @@ export async function getSettings() {
       tab: 'auth',
     },
     {
+      name: 'email_verification_enabled',
+      title: 'Email Verification Required',
+      type: 'switch',
+      value: 'false',
+      group: 'email_auth',
+      tab: 'auth',
+      tip: 'Require users to verify their email before they can sign in. Requires a configured email provider (e.g. Resend).',
+    },
+    {
       name: 'google_auth_enabled',
       title: 'Auth Enabled',
       type: 'switch',
@@ -685,8 +694,8 @@ export async function getSettings() {
     {
       name: 'resend_sender_email',
       title: 'Resend Sender Email',
-      type: 'email',
-      placeholder: '',
+      type: 'text',
+      placeholder: 'ShipAny Two <no-reply@mail.shipany.site>',
       group: 'resend',
       tab: 'email',
     },
