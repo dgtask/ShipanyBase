@@ -1,3 +1,4 @@
+import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 
@@ -19,7 +20,7 @@ export function db() {
       : {};
 
   if (isCloudflareWorker) {
-    const { env }: { env: any } = { env: {} };
+    const { env }: { env: any } = getCloudflareContext();
     // Detect if set Hyperdrive
     isHyperdrive = 'HYPERDRIVE' in env;
 
